@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>IFCA AI Assistant - Supporting Your Fertility Counselling Practice</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Georgia', 'Times New Roman', serif;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c5282 0%, #2a4365 100%);
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 2fr;
+            gap: 40px;
+        }
+
+        .sidebar {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            height: fit-content;
+            border-left: 4px solid #2c5282;
+        }
+
+        .sidebar h2 {
+            color: #2c5282;
+            font-size: 20px;
+            margin-bottom: 20px;
+            font-weight: 400;
+        }
+
+        .sidebar h3 {
+            color: #2c3e50;
+            font-size: 16px;
+            margin-bottom: 15px;
+            margin-top: 25px;
+            font-weight: 600;
+        }
+
+        .topic-btn {
+            display: block;
+            width: 100%;
+            padding: 12px 15px;
+            margin-bottom: 8px;
+            background: #f8f9fa;
+            border: 1px solid #e9ecef;
+            border-radius: 4px;
+            color: #2c3e50;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: left;
+        }
+
+        .topic-btn:hover {
+            background: #e9ecef;
+            border-color: #2c5282;
+            transform: translateX(5px);
+        }
+
+        .philosophy {
+            background: #f1f8ff;
+            padding: 20px;
+            border-radius: 6px;
+            margin-top: 25px;
+            border-left: 4px solid #2c5282;
+        }
+
+        .philosophy h4 {
+            color: #2c5282;
+            margin-bottom: 10px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .philosophy p {
+            font-size: 13px;
+            color: #4a5568;
+            line-height: 1.5;
+        }
+
+        .main-content {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .chat-header {
+            background: #2c5282;
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .chat-header h2 {
+            font-size: 22px;
+            margin-bottom: 8px;
+            font-weight: 400;
+        }
+
+        .chat-header p {
+            opacity: 0.9;
+            font-size: 14px;
+        }
+
+        .chat-container {
+            height: 500px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: #fafafa;
+        }
+
+        .message {
+            margin-bottom: 20px;
+            padding: 15px;
+            border-radius: 6px;
+            max-width: 85%;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .message.user {
+            background: #2c5282;
+            color: white;
+            margin-left: auto;
+            border-radius: 15px 15px 5px 15px;
+        }
+
+        .message.assistant {
+            background: white;
+            color: #2c3e50;
+            border: 1px solid #e9ecef;
+            border-radius: 15px 15px 15px 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .message-header {
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .message-content {
+            line-height: 1.6;
+            font-size: 14px;
+        }
+
+        .message-content strong {
+            color: #2c5282;
+        }
+
+        .input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e9ecef;
+        }
+
+        .input-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.3s ease;
+            font-family: inherit;
+        }
+
+        .chat-input:focus {
+            border-color: #2c5282;
+        }
+
+        .send-btn {
+            padding: 12px 25px;
+            background: #2c5282;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            font-size: 14px;
+        }
+
+        .send-btn:hover {
+            background: #2a4365;
+            transform: translateY(-1px);
+        }
+
+        .send-btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .welcome-message {
+            text-align: center;
+            color: #4a5568;
+            font-style: italic;
+            margin-top: 40px;
+            padding: 20px;
+            background: white;
+            border-radius: 6px;
+            border: 1px solid #e9ecef;
+        }
+
+        .welcome-message h3 {
+            color: #2c5282;
+            margin-bottom: 15px;
+            font-weight: 400;
+        }
+
+        .confidence-indicator {
+            font-size: 11px;
+            color: #2c5282;
+            margin-top: 8px;
+            font-weight: 500;
+        }
+
+        .disclaimer {
+            background: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 6px;
+            margin-top: 20px;
+            font-size: 12px;
+            color: #856404;
+        }
+
+        .disclaimer strong {
+            color: #856404;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 24px;
+            }
+            
+            .sidebar {
+                order: 2;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>IFCA AI Assistant</h1>
+        <p>Supporting Your Fertility Counselling Practice with Evidence-Based Information</p>
+    </div>
+
+    <div class="container">
+        <div class="sidebar">
+            <h2>Counselling Support Areas</h2>
+            
+            <h3>Medical Information</h3>
+            <button class="topic-btn" onclick="askQuestion('What are the main causes of female infertility and how should I explain them to clients?')">
+                Female Infertility Causes
+            </button>
+            <button class="topic-btn" onclick="askQuestion('What are the main causes of male infertility and how to address male partner concerns?')">
+                Male Infertility Causes
+            </button>
+            <button class="topic-btn" onclick="askQuestion('Explain the IVF process and success rates by age for counselling clients')">
+                IVF Process & Success Rates
+            </button>
+            <button class="topic-btn" onclick="askQuestion('What are the different types of fertility treatments available?')">
+                Treatment Options Overview
+            </button>
+            
+            <h3>Emotional Support</h3>
+            <button class="topic-btn" onclick="askQuestion('What are the emotional stages clients go through during fertility treatment?')">
+                Emotional Stages of Treatment
+            </button>
+            <button class="topic-btn" onclick="askQuestion('How do I support clients dealing with pregnancy loss and miscarriage?')">
+                Pregnancy Loss Support
+            </button>
+            <button class="topic-btn" onclick="askQuestion('How to help couples navigate relationship challenges during fertility treatment?')">
+                Relationship Challenges
+            </button>
+            <button class="topic-btn" onclick="askQuestion('What coping strategies can I teach clients for fertility stress?')">
+                Coping Strategies
+            </button>
+            
+            <h3>Complex Considerations</h3>
+            <button class="topic-btn" onclick="askQuestion('How to counsel clients about donor gametes and third-party reproduction?')">
+                Donor Gametes Counselling
+            </button>
+            <button class="topic-btn" onclick="askQuestion('What are the psychological implications of genetic testing in fertility?')">
+                Genetic Testing Implications
+            </button>
+            <button class="topic-btn" onclick="askQuestion('How to help clients decide when to stop fertility treatment?')">
+                Treatment Discontinuation
+            </button>
+
+            <div class="philosophy">
+                <h4>IFCA Philosophy</h4>
+                <p>As specialist Fertility Counsellors, we create confidential and safe spaces for clients to explore feelings, concerns, losses and hopes. This AI assistant supports your practice by providing evidence-based information to enhance your counselling approach.</p>
+            </div>
+
+            <div class="disclaimer">
+                <strong>Professional Reminder:</strong> This AI assistant provides educational information to support your practice. Always rely on your professional training and judgment in counselling sessions. Medical decisions should involve healthcare professionals.
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="chat-header">
+                <h2>Your Counselling Support Assistant</h2>
+                <p>Ask questions to get evidence-based information and counselling guidance</p>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chatMessages">
+                    <div class="welcome-message">
+                        <h3>Welcome to Your AI Assistant</h3>
+                        <p>I'm here to support your fertility counselling practice by providing:</p>
+                        <p>• Evidence-based medical information<br>
+                        • Counselling approaches for complex situations<br>
+                        • Support strategies for emotional challenges<br>
+                        • Guidance on difficult conversations with clients</p>
+                        <p style="margin-top: 15px;">Select a topic from the sidebar or ask your own question to begin.</p>
+                    </div>
+                </div>
+
+                <div class="input-container">
+                    <div class="input-row">
+                        <input type="text" class="chat-input" id="messageInput" placeholder="Ask about fertility treatments, counselling approaches, or client support strategies..." onkeypress="handleKeyPress(event)">
+                        <button class="send-btn" id="sendBtn" onclick="sendMessage()">Send</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let conversationHistory = [];
+
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        function askQuestion(question) {
+            document.getElementById('messageInput').value = question;
+            sendMessage();
+        }
+
+        function sendMessage() {
+            const input = document.getElementById('messageInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+
+            // Add user message
+            addMessage('user', message);
+            input.value = '';
+            
+            // Disable send button
+            const sendBtn = document.getElementById('sendBtn');
+            sendBtn.disabled = true;
+            sendBtn.textContent = 'Thinking...';
+
+            // Simulate AI response
+            setTimeout(() => {
+                const response = generateResponse(message);
+                addMessage('assistant', response);
+                
+                // Re-enable send button
+                sendBtn.disabled = false;
+                sendBtn.textContent = 'Send';
+            }, 1200 + Math.random() * 800);
+        }
+
+        function addMessage(sender, content) {
+            const messagesContainer = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}`;
+
+            const headerDiv = document.createElement('div');
+            headerDiv.className = 'message-header';
+            headerDiv.textContent = sender === 'user' ? 'You' : 'IFCA AI Assistant';
+
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            contentDiv.innerHTML = content;
+
+            messageDiv.appendChild(headerDiv);
+            messageDiv.appendChild(contentDiv);
+
+            if (sender === 'assistant') {
+                const confidenceDiv = document.createElement('div');
+                confidenceDiv.className = 'confidence-indicator';
+                confidenceDiv.textContent = '✓ Evidence-based information for professional practice';
+                messageDiv.appendChild(confidenceDiv);
+            }
+
+            messagesContainer.appendChild(messageDiv);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+
+            // Store in conversation history
+            conversationHistory.push({sender, content});
+        }
+
+        function generateResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Enhanced responses with counselling focus
+            if (lowerMessage.includes('female') && lowerMessage.includes('infertility')) {
+                return `<strong>Female Infertility: Medical Information & Counselling Approach</strong><br><br>
+                <strong>Main Causes:</strong><br>
+                • <strong>Ovulation Disorders (25%):</strong> PCOS, hypothalamic dysfunction, premature ovarian failure<br>
+                • <strong>Tubal Factors (20%):</strong> Blocked tubes from PID, endometriosis, previous surgery<br>
+                • <strong>Endometriosis (10%):</strong> Tissue growth affecting fertility<br>
+                • <strong>Age-Related Factors (35%):</strong> Declining egg quality and quantity<br>
+                • <strong>Uterine/Cervical Issues (10%):</strong> Fibroids, polyps, structural abnormalities<br><br>
+                <strong>Counselling Approach:</strong><br>
+                • Validate the client's feelings about receiving a diagnosis<br>
+                • Explore what the diagnosis means to them personally<br>
+                • Discuss treatment options step-by-step without overwhelming<br>
+                • Address any guilt or self-blame the client may feel<br>
+                • Help them process the grief of their imagined fertility journey<br><br>
+                <strong>Common Client Concerns:</strong> "Is it my fault?" "What did I do wrong?" "Will I ever be a mother?"`;
+            }
+            
+            if (lowerMessage.includes('male') && (lowerMessage.includes('infertility') || lowerMessage.includes('partner'))) {
+                return `<strong>Male Infertility: Medical Information & Counselling Considerations</strong><br><br>
+                <strong>Main Causes:</strong><br>
+                • <strong>Sperm Production Issues (65%):</strong> Low count, poor motility, abnormal morphology<br>
+                • <strong>Varicocele (40%):</strong> Enlarged veins affecting sperm quality<br>
+                • <strong>Hormonal Imbalances (2%):</strong> Low testosterone, FSH, LH<br>
+                • <strong>Genetic Factors (10%):</strong> Chromosomal abnormalities<br>
+                • <strong>Lifestyle/Environmental:</strong> Heat exposure, smoking, medications<br><br>
+                <strong>Counselling Male Partners:</strong><br>
+                • Acknowledge societal pressures around masculinity and fertility<br>
+                • Normalize feelings of inadequacy or failure<br>
+                • Encourage open communication with their partner<br>
+                • Address potential withdrawal or avoidance behaviors<br>
+                • Discuss how this affects their sense of identity<br><br>
+                <strong>Supporting the Couple:</strong> Help them navigate different coping styles and maintain intimacy beyond reproduction.`;
+            }
+            
+            if (lowerMessage.includes('ivf') || lowerMessage.includes('vitro')) {
+                return `<strong>IVF Process & Counselling Support</strong><br><br>
+                <strong>Medical Process:</strong><br>
+                1. <strong>Ovarian Stimulation:</strong> 8-14 days of hormone injections<br>
+                2. <strong>Egg Retrieval:</strong> Minor surgical procedure<br>
+                3. <strong>Fertilization:</strong> Eggs and sperm combined in lab<br>
+                4. <strong>Embryo Culture:</strong> 3-5 days of development<br>
+                5. <strong>Embryo Transfer:</strong> Placing embryo(s) in uterus<br>
+                6. <strong>Two-Week Wait:</strong> Period before pregnancy test<br><br>
+                <strong>Success Rates by Age:</strong><br>
+                • Under 35: 40-50% live birth rate<br>
+                • 35-37: 30-40%<br>
+                • 38-40: 20-30%<br>
+                • Over 40: 10-20%<br><br>
+                <strong>Counselling Focus:</strong><br>
+                • Prepare clients for the emotional intensity of each stage<br>
+                • Discuss the "roller coaster" nature of IVF<br>
+                • Help them develop coping strategies for the waiting periods<br>
+                • Address fears about multiple cycles or failure<br>
+                • Support decision-making about number of embryos to transfer`;
+            }
+            
+            if (lowerMessage.includes('emotional') || lowerMessage.includes('stages')) {
+                return `<strong>Emotional Stages of Fertility Treatment</strong><br><br>
+                <strong>1. Shock & Disbelief:</strong> "This can't be happening to us"<br>
+                • <em>Counselling:</em> Normalize the shock, provide information gradually<br><br>
+                <strong>2. Isolation & Withdrawal:</strong> Avoiding pregnant friends, social events<br>
+                • <em>Counselling:</em> Validate need for protection, discuss selective socializing<br><br>
+                <strong>3. Anger & Blame:</strong> "Why us?" Self-blame or partner blame<br>
+                • <em>Counselling:</em> Help express anger safely, address blame patterns<br><br>
+                <strong>4. Bargaining:</strong> "If I just try harder..." lifestyle changes<br>
+                • <em>Counselling:</em> Support healthy changes, challenge perfectionism<br><br>
+                <strong>5. Depression & Despair:</strong> Deep sadness, loss of hope<br>
+                • <em>Counselling:</em> Assess for clinical depression, provide hope while validating pain<br><br>
+                <strong>6. Acceptance & Adaptation:</strong> Finding new ways forward<br>
+                • <em>Counselling:</em> Support exploration of all options, celebrate resilience<br><br>
+                <strong>Important Note:</strong> These stages aren't linear - clients may cycle through them multiple times.`;
+            }
+            
+            if (lowerMessage.includes('pregnancy loss') || lowerMessage.includes('miscarriage')) {
+                return `<strong>Supporting Clients Through Pregnancy Loss</strong><br><br>
+                <strong>Understanding the Grief:</strong><br>
+                • Pregnancy loss is a bereavement, regardless of gestation<br>
+                • Clients may feel their grief isn't recognized by others<br>
+                • Multiple losses can create complex trauma responses<br>
+                • Anticipatory grief may occur with subsequent pregnancies<br><br>
+                <strong>Counselling Approach:</strong><br>
+                • Validate the reality of their baby and their loss<br>
+                • Explore what this pregnancy meant to them<br>
+                • Discuss memorialization and ritual if appropriate<br>
+                • Address guilt and self-blame (very common)<br>
+                • Support decision-making about trying again<br><br>
+                <strong>Common Feelings:</strong><br>
+                • "My body has failed me"<br>
+                • "I should have done something differently"<br>
+                • "Others don't understand this was my baby"<br>
+                • "I'm afraid to hope again"<br><br>
+                <strong>Partner Support:</strong> Help couples understand different grieving styles and support each other through this loss.`;
+            }
+            
+            if (lowerMessage.includes('relationship') || lowerMessage.includes('couple')) {
+                return `<strong>Supporting Couples Through Fertility Challenges</strong><br><br>
+                <strong>Common Relationship Strains:</strong><br>
+                • Different coping styles (approach vs. avoidance)<br>
+                • Disagreements about treatment decisions<br>
+                • Loss of intimacy and spontaneity<br>
+                • Financial stress from treatment costs<br>
+                • Blame and resentment patterns<br><br>
+                <strong>Counselling Strategies:</strong><br>
+                • Normalize that couples cope differently<br>
+                • Facilitate communication about fears and hopes<br>
+                • Address the medicalization of intimacy<br>
+                • Help them maintain connection beyond fertility<br>
+                • Support shared decision-making processes<br><br>
+                <strong>Protective Factors:</strong><br>
+                • Regular couple time unrelated to fertility<br>
+                • Open communication about feelings<br>
+                • Shared meaning-making about the experience<br>
+                • External support systems<br>
+                • Professional counselling when needed<br><br>
+                <strong>Red Flags:</strong> Persistent blame, emotional or physical withdrawal, substance use, or threats to relationship.`;
+            }
+            
+            if (lowerMessage.includes('coping') || lowerMessage.includes('stress')) {
+                return `<strong>Coping Strategies for Fertility Stress</strong><br><br>
+                <strong>Emotional Regulation:</strong><br>
+                • Mindfulness and breathing exercises<br>
+                • Journaling for emotional processing<br>
+                • Regular counselling or therapy<br>
+                • Support groups (online or in-person)<br>
+                • Creative expressions (art, music, writing)<br><br>
+                <strong>Practical Coping:</strong><br>
+                • Information management (limiting Dr. Google)<br>
+                • Creating fertility-free zones and times<br>
+                • Building flexible treatment plans<br>
+                • Financial planning and budgeting<br>
+                • Maintaining work-life boundaries<br><br>
+                <strong>Physical Wellness:</strong><br>
+                • Regular, moderate exercise<br>
+                • Adequate sleep hygiene<br>
+                • Nutritious eating without obsession<br>
+                • Limiting alcohol and caffeine<br>
+                • Stress reduction techniques<br><br>
+                <strong>Social Support:</strong><br>
+                • Selective sharing with trusted friends<br>
+                • Setting boundaries with insensitive comments<br>
+                • Connecting with others who understand<br>
+                • Maintaining non-fertility friendships<br><br>
+                <strong>Teaching Clients:</strong> Help them develop a personalized toolkit of strategies rather than prescribing one-size-fits-all solutions.`;
+            }
+            
+            if (lowerMessage.includes('donor') || lowerMessage.includes('third-party')) {
+                return `<strong>Counselling for Donor Gametes & Third-Party Reproduction</strong><br><br>
+                <strong>Key Considerations:</strong><br>
+                • Grief for genetic connection that won't be<br>
+                • Identity questions about parenthood<br>
+                • Disclosure decisions to child and others<br>
+                • Choosing known vs. anonymous donors<br>
+                • Impact on extended family relationships<br><br>
+                <strong>Counselling Process:</strong><br>
+                • Explore meaning of genetic vs. social parenthood<br>
+                • Discuss future disclosure to children<br>
+                • Address concerns about "telling" or "not telling"<br>
+                • Help process loss of imagined biological child<br>
+                • Support decision-making about donor characteristics<br><br>
+                <strong>Common Concerns:</strong><br>
+                • "Will this child really be mine?"<br>
+                • "What if they want to find their donor?"<br>
+                • "How do I tell my family?"<br>
+                • "Will I feel different about this child?"<br><br>
+                <strong>Ethical Considerations:</strong><br>
+                • Child's right to know their genetic origins<br>
+                • Honesty vs. privacy in family building<br>
+                • Long-term implications of secrecy<br>
+                • Support for all family members<br><br>
+                <strong>Resources:</strong> Consider referring to specialists in third-party reproduction counselling for complex cases.`;
+            }
+            
+            if (lowerMessage.includes('genetic testing') || lowerMessage.includes('genetic')) {
+                return `<strong>Genetic Testing in Fertility: Counselling Implications</strong><br><br>
+                <strong>Types of Testing:</strong><br>
+                • Carrier screening for genetic conditions<br>
+                • Preimplantation genetic testing (PGT)<br>
+                • Prenatal genetic testing<br>
+                • Fertility-related genetic testing<br><br>
+                <strong>Psychological Implications:</strong><br>
+                • Anxiety while waiting for results<br>
+                • Guilt about being a "carrier"<br>
+                • Difficult decisions about affected embryos<br>
+                • Family dynamics and disclosure issues<br>
+                • Grief over genetic "imperfection"<br><br>
+                <strong>Counselling Approach:</strong><br>
+                • Explore values and beliefs about genetic conditions<br>
+                • Discuss what results would mean to them<br>
+                • Prepare for difficult decision-making<br>
+                • Address family history and guilt<br>
+                • Support informed consent process<br><br>
+                <strong>Ethical Considerations:</strong><br>
+                • Reproductive autonomy and choice<br>
+                • Disability rights perspectives<br>
+                • Family pressure and expectations<br>
+                • Long-term implications for children<br><br>
+                <strong>Decision-Making Support:</strong> Help clients explore their values without imposing your own, and support whatever decision they make.`;
+            }
+            
+            if (lowerMessage.includes('stop') || lowerMessage.includes('discontinu')) {
+                return `<strong>Counselling Clients About Stopping Treatment</strong><br><br>
+                <strong>Reasons Clients Consider Stopping:</strong><br>
+                • Physical exhaustion from treatments<br>
+                • Emotional burnout and mental health concerns<br>
+                • Financial limitations<br>
+                • Relationship strain<br>
+                • Medical recommendations<br>
+                • Changing life priorities<br><br>
+                <strong>Counselling Approach:</strong><br>
+                • Explore what "enough" means to them<br>
+                • Discuss fears about stopping vs. continuing<br>
+                • Help them process potential regret<br>
+                • Support exploration of alternatives<br>
+                • Address grief over unfulfilled dreams<br><br>
+                <strong>Important Considerations:</strong><br>
+                • There's no "right" time to stop<br>
+                • Decision may be temporary or permanent<br>
+                • Partners may have different timelines<br>
+                • External pressure to continue or stop<br>
+                • Quality of life vs. potential for success<br><br>
+                <strong>Alternative Paths:</strong><br>
+                • Adoption<br>
+                • Child-free living<br>
+                • Donor options<br>
+                • Taking a treatment break<br>
+                • Different clinic or approach<br><br>
+                <strong>Supporting the Decision:</strong> Help clients make decisions aligned with their values and circumstances, not societal expectations.`;
+            }
+            
+            // Default response for other questions
+            return `Thank you for your question. As your IFCA AI Assistant, I'm here to support your fertility counselling practice with:<br><br>
+            • Evidence-based medical information about fertility conditions and treatments<br>
+            • Counselling approaches for complex emotional situations<br>
+            • Strategies for supporting clients through difficult decisions<br>
+            • Guidance on navigating sensitive conversations<br>
+            • Resources for specialized situations<br><br>
+            Could you be more specific about what aspect of fertility counselling you'd like support with? I'm designed to complement your professional expertise and help you provide the best possible care to your clients.<br><br>
+            <em>Remember: This information supports your professional practice but doesn't replace your clinical judgment or specialized training.</em>`;
+        }
+    </script>
+</body>
+</html>
